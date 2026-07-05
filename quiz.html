@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background:#F8F9FC;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+        }
+
+        .container{
+            width:500px;
+            background:white;
+            padding:30px;
+            border-radius:18px;
+            box-shadow:0 10px 25px rgba(0,0,0,.15);
+        }
+
+        h1{
+            text-align:center;
+            color:#D63384;
+            margin-bottom:10px;
+        }
+
+        .subtitle{
+            text-align:center;
+            color:#666;
+            margin-bottom:30px;
+        }
+
+        #progress{
+            color:#888;
+            margin-bottom:20px;
+            font-weight:bold;
+        }
+
+        h2{
+            margin-bottom:20px;
+            color:#333;
+        }
+
+        .option{
+            display:block;
+            width:100%;
+            padding:15px;
+            margin:12px 0;
+            border:2px solid #E8DCEB;
+            border-radius:12px;
+            background:white;
+            text-align:left;
+            cursor:pointer;
+            transition:.3s;
+            font-size:16px;
+        }
+
+        .option:hover{
+            background:#FBE8F4;
+            border-color:#D63384;
+        }
+
+        #nextBtn{
+            width:100%;
+            padding:15px;
+            margin-top:20px;
+            border:none;
+            border-radius:12px;
+            background:#D63384;
+            color:white;
+            font-size:16px;
+            cursor:pointer;
+            transition:.3s;
+        }
+
+        #nextBtn:hover{
+            background:#B52A6F;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>🧠 Quiz App</h1>
+
+    <p class="subtitle">
+        Test your Web Development knowledge!
+    </p>
+
+    <p id="progress"></p>
+
+    <h2 id="question"></h2>
+
+    <div id="answers"></div>
+
+    <button id="nextBtn">Next</button>
+
+</div>
+
+<script>
+
+const quiz = [
+
+{
+question:"What does HTML stand for?",
+answers:[
+"Hyper Text Markup Language",
+"High Text Machine Language",
+"Hyperlinks and Text Markup Language",
+"Home Tool Markup Language"
+],
+correct:0
+},
+
+{
+question:"Which language is used to style web pages?",
+answers:[
+"HTML",
+"CSS",
+"Java",
+"Python"
+],
+correct:1
+},
+
+{
+question:"Which language makes websites interactive?",
+answers:[
+"JavaScript",
+"SQL",
+"PHP",
+"C++"
+],
+correct:0
+},
+
+{
+question:"Which HTML tag inserts an image?",
+answers:[
+"<image>",
+"<img>",
+"<picture>",
+"<src>"
+],
+correct:1
+},
+
+{
+question:"Which CSS property changes text color?",
+answers:[
+"text-color",
+"font-color",
+"color",
+"background-color"
+],
+correct:2
+}
+
+];
+
+let currentQuestion = 0;
+let score = 0;
+let selectedAnswer = -1;
+
+const question = document.getElementById("question");
+const answers = document.getElementById("answers");
+const progress = document.getElementById("progress");
+const nextBtn = document.getElementById("nextBtn");
+
+function loadQuestion(){
+
+    selectedAnswer = -1;
+
+    progress.textContent =
+    "Question " + (currentQuestion+1) + " of " + quiz.length;
+
+    question.textContent =
+    quiz[currentQuestion].question;
+
+    answers.innerHTML="";
+
+    quiz[currentQuestion].answers.forEach(function(answer,index){
+
+        const button=document.createElement("button");
+
+        button.className="option";
+
+        button.textContent=answer;
+
+        button.onclick=function(){
+
+            selectedAnswer=index;
+
+            document.querySelectorAll(".option").forEach(function(btn){
+
+                btn.style.background="white";
+                btn.style.borderColor="#E8DCEB";
+
+            });
+
+            button.style.background="#FBE8F4";
+            button.style.borderColor="#D63384";
+
+        };
+
+        answers.appendChild(button);
+
+    });
+
+}
+
+loadQuestion();
+nextBtn.onclick = function(){
+
+    if(selectedAnswer === -1){
+        alert("Please select an answer.");
+        return;
+    }
+
+    if(selectedAnswer === quiz[currentQuestion].correct){
+        score++;
+    }
+
+    currentQuestion++;
+
+    if(currentQuestion < quiz.length){
+        loadQuestion();
+    }
+
+    else{
+
+        document.querySelector(".container").innerHTML = `
+
+            <h1>🎉 Quiz Completed!</h1>
+
+            <p class="subtitle">
+                You scored <strong>${score}</strong> out of <strong>${quiz.length}</strong>
+            </p>
+
+            <button id="restartBtn">
+                Restart Quiz
+            </button>
+
+        `;
+
+        document.getElementById("restartBtn").onclick = function(){
+            location.reload();
+        };
+
+    }
+
+};
+
+</script>
+
+</body>
+</html>
